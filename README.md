@@ -59,10 +59,10 @@ Note - taking the gr (regridded data where available)
 * For each lat/lon box take the maximum value from any month of the year to create a 2D array of lat and lon (i.e. it no longer has a time dimension)
 
 ### DHW calculation
-* subtract thhat MMM climatology (as calculated above) from each daily field
+* subtract the MMM climatology (as calculated above) from each daily field
 * set all values less than 1 to zero
 * starting with day 84 (i.e. 12 weeks times 7 days)
-  * sum the anomalies from the MMM climatology along the time axis from the 84 preceeding days (inclusive of the current day) and divide by 7
+  * sum the anomalies from the MMM climatology (i.e. from step 'set all values less than 1 to zero') along the time axis from the 84 preceeding days (inclusive of the current day) and divide by 7
   * assign this field to that day (i.e. 1st time through loop, day 84)
 
 # DHW code
