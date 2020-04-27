@@ -53,7 +53,9 @@ Note - taking the gr (regridded data where available)
 * average daily data to monthly averages
 * take the 1985 to 2012 data inclusive of both start and end years 
 * take the data falling within each calendar month (across all years) in turn and
-  * perform a least squares linear regression through time for each latitiude/longitude box and calculate the value from that slope for the decimal year 1988.2857 and assign this value to the lat/lon box for that regression
+  * perform a least squares linear regression through time for each latitiude/longitude box
+  * calculate the value from that slope for the decimal year 1988.2857
+  * assign this value to the lat/lon box for that regression
 * For each lat/lon box take the maximum value from any month of the year to create a 2D array of lat and lon (i.e. it no longer has a time dimension)
 
 ### DHW calculation
