@@ -130,6 +130,7 @@ for directorie in directories:
         if os.path.exists(file):
             output_filename = base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/processed/dhw_Oday_'+model+'_hist_'+directorie.split('_')[2]+'_GBR.nc'
             output_filename2 = base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/processed/dhw_Oday_'+model+'_hist_'+directorie.split('_')[2]+'_GBR_ann_max.nc'
+            mmm_file = base_directory+'tos_day_historical_r1i1p1f1_r1i1p1f2/processed/'+model+'_mmm.nc'
             test1 = os.path.exists(output_filename)
             test2 = os.path.exists(output_filename2)
             if not(test1) and not(test2):
@@ -147,8 +148,13 @@ for directorie in directories:
                     iris.coord_categorisation.add_month_number(cube, 'time', name='month_number')
                 except:
                     pass
-                print 'calculating mmm_climatology'
-                mmm_climatology = mmm_skirving(cube)
+                if not(os.path.exists(mmm_file)):
+                    print 'calculating mmm_climatology'
+                    mmm_climatology = mmm_skirving(cube)
+                    iris.fileformats.netcdf.save(mmm_climatology, mmm_file)
+                else:
+                    print 'reading in mmm_climatology'
+                    mmm_climatology = iris.load_cube(mmm_file)
                 print 'calculating DHW'
                 dhw_cube = dhw(cube,mmm_climatology,years_over_which_to_calculate_dhw)
                 dhw_cube_max = dhw_cube.aggregated_by('year',iris.analysis.MAX)
