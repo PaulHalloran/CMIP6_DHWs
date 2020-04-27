@@ -50,18 +50,18 @@ Note - taking the gr (regridded data where available)
 # DHW calculation
 
 ### MMM calculation
-* average daily data into monthly averaged
-* take the 1985 to 2012 data subset inclusive of both start and and years 
+* average daily data to monthly averages
+* take the 1985 to 2012 data inclusive of both start and end years 
 * take the data falling within each calendar month (across all years) in turn and
-..* perform a least squares linear regression through time for each latitiude/longitude box and calculate the value from that slope for the decimal year 1988.2857 and assign this value to the lat/lon box for that regression
+  * perform a least squares linear regression through time for each latitiude/longitude box and calculate the value from that slope for the decimal year 1988.2857 and assign this value to the lat/lon box for that regression
 * For each lat/lon box take the maximum value from any month of the year to create a 2D array of lat and lon (i.e. it no longer has a time dimension)
 
 ### DHW calculation
 * subtract thhat MMM climatology (as calculated above) from each daily field
 * set all values less than 1 to zero
 * starting with day 84 (i.e. 12 weeks times 7 days)
-..* sum the anomalies from the MMM climatology along the time axis from the 84 preceeding days (inclusive of the current day) and divide by 7
-..* assign this field to that day (i.e. 1st time through loop, day 84)
+  * sum the anomalies from the MMM climatology along the time axis from the 84 preceeding days (inclusive of the current day) and divide by 7
+  * assign this field to that day (i.e. 1st time through loop, day 84)
 
 # DHW code
 
