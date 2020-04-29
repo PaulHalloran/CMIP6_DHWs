@@ -73,6 +73,8 @@ In script DHW_cmip6.py
 
 Output files are mirrored between */data/BatCaveNAS/ph290/CMIP6_william/*  and */home/shared/for_ben*
 
+and at least the initial (annnual Max) data uploaded into the 'data' directory here because the files are small.
+
 The netcdf files are of the form:
 
 dhw_Oday_MRI-ESM2-0_hist_ssp126_GBR_ann_max.nc 
