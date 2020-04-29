@@ -69,7 +69,7 @@ Note - taking the gr (regridded data where available)
 
 In script DHW_cmip6.py
 
-# Final file location and nameing format
+# Final file location and naming format
 
 Output files are mirrored between */data/BatCaveNAS/ph290/CMIP6_william/*  and */home/shared/for_ben*
 
@@ -81,9 +81,11 @@ and
 
 dhw_Oday_MRI-ESM2-0_hist_ssp126_GBR_ann_max_masked.nc
 
+The relevant pieces of infromation in this filename are split with underscores, and splitting filenames by underscore will always keep the pieces of information in the same order
+
 This refers to (e.g.):
 
-- dhw_Oday - calculated from daily CMIP6 model data
+- dhw_Oday - calculated from ('O') ocean ('day') daily CMIP6 model data
 - _MRI-ESM2-0_ - using the CMIP6 model 'MRI-ESM2-0'
-- hist_ssp126_ - from teh historical and ssp126 scenarios combined (the historical run switches to the future run in 2015). See https://www.researchgate.net/figure/SSP-RCP-scenario-matrix-illustrating-ScenarioMIP-simulations-Each-cell-in-the-matrix_fig1_301594661
+- hist_ssp126_ - from the historical and ssp126 scenarios combined (the historical run switches to the future run in 2015). For basic info about the scenarios see https://www.researchgate.net/figure/SSP-RCP-scenario-matrix-illustrating-ScenarioMIP-simulations-Each-cell-in-the-matrix_fig1_301594661
 - GBR_ann_max.nc - I have calculated the annual maximum DHW values. The files ending in ‘ann_max_masked..nc’ are still annual maximum DHWs but with the non-reef pixels removed.
