@@ -1,3 +1,5 @@
+Main data now available in the 'data' directory in this repository
+
 Downloading to **/data/BatCaveNAS/ph290/CMIP6_william/**
 
 Useful summary of equivalent SSP RCPs https://www.researchgate.net/figure/SSP-RCP-scenario-matrix-illustrating-ScenarioMIP-simulations-Each-cell-in-the-matrix_fig1_301594661
