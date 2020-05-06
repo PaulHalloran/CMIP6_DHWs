@@ -35,7 +35,11 @@ temp_file2 = str(uuid.uuid4())+'.nc'
 
 
 for direct in directs:
+    print '#################################'
+    print '#################################'
     print direct
+    print '#################################'
+    print '#################################'
     in_directory = base_dir + direct +'/'
     out_directory = base_dir + direct +'/processed/'
     try:
@@ -62,8 +66,10 @@ for direct in directs:
                 if sizing == 1:
                     subprocess.call(['cp '+files[0]+' '+temporary_file_space+temp_file1], shell=True)
                 print 'regridding files'
-                subprocess.call(['cdo -P 15 -f nc4c -z zip_2  remapbil,r360x180  -selvar,'+var+' -seldate,'+daterange+' '+temporary_file_space+temp_file1+' '+out_directory+output_filename], shell=True)
+                subprocess.call(['cdo -P 15 -f nc4c -z zip_2  remapbil,grid_file_to_use  -selvar,'+var+' -seldate,'+daterange+' '+temporary_file_space+temp_file1+' '+out_directory+output_filename], shell=True)
                 subprocess.call('rm '+temporary_file_space+temp_file1, shell=True)
+        else:
+            print model,' output exists'
         tmp2 = glob.glob(out_directory+output_filename2)
         if np.size(tmp2) == 0:
             if os.path.exists(out_directory+output_filename):

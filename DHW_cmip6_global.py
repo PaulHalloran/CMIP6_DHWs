@@ -20,17 +20,9 @@ from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 import os
 import os.path
 import time
-from datetime import datetime
 
-basedir = '/data/BatCaveNAS/ph290/CMIP6_william/'
-lock_file = basedir+'lock_merge_hist_and_x'
+time.sleep(60.0*60.0*2.0)
 
-while os.path.exists(lock_file):
-    now = datetime.now()
-    current_time = now.strftime("%H:%M:%S")
-    print("Current Time =", current_time)
-    print 'waiting '
-    time.sleep(30.0)
 
 def linregress_3D(y_array):
     # y_array is a 3-D array formatted like (time,lon,lat)
@@ -142,12 +134,12 @@ for directorie in directories:
     print directorie
     for model in models:
         print model
-        file = base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/processed/tos_Oday_'+model+'_hist_'+directorie.split('_')[2]+'_GBR.nc'
+        file = base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/processed/tos_Oday_'+model+'_hist_'+directorie.split('_')[2]+'.nc'
         print file
         if os.path.exists(file):
-            output_filename = base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/processed/dhw_Oday_'+model+'_hist_'+directorie.split('_')[2]+'_GBR.nc'
-            output_filename2 = base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/processed/dhw_Oday_'+model+'_hist_'+directorie.split('_')[2]+'_GBR_ann_max.nc'
-            mmm_file = base_directory+'tos_day_historical_r1i1p1f1_r1i1p1f2/processed/'+model+'_mmm.nc'
+            output_filename = base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/processed/dhw_Oday_'+model+'_hist_'+directorie.split('_')[2]+'_global.nc'
+            output_filename2 = base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/processed/dhw_Oday_'+model+'_hist_'+directorie.split('_')[2]+'_global_ann_max.nc'
+            mmm_file = base_directory+'tos_day_historical_r1i1p1f1_r1i1p1f2/processed/'+model+'_mmm_global.nc'
             test1 = os.path.exists(output_filename)
             test2 = os.path.exists(output_filename2)
             if not(test1) and not(test2):

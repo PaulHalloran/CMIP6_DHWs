@@ -2,9 +2,23 @@ import iris
 import iris.quickplot as qplt
 import matplotlib.pyplot as plt
 import numpy as np
+import os
+import time
+import subprocess
 
 basedir = '/data/BatCaveNAS/ph290/CMIP6_william/'
 mask_file = 'reef_mask.nc3.nc'
+
+
+#resam ple 5km reef mack to cmip grid
+file = 'tos_day_ssp119_r1i1p1f1_r1i1p1f2/processed/dhw_Oday_MRI-ESM2-0_hist_ssp119_GBR_ann_max.nc'
+
+mask_cube = iris.load_cube(basedir+mask_file)
+
+cube = iris.load_cube(basedir+file)
+outmask = cube[0].copy()
+outmask.data[:] = np.nan
+outmask.data.mask[:] = False
 
 #load in the reef data and put into cube
 # North West
@@ -24,16 +38,6 @@ units='K',dim_coords_and_dims=[(latitude, 0), (longitude, 1)])
 new_mask_cube.data = np.flipud(mask_cube.data)
 new_mask_cube_copy = new_mask_cube.copy()
 
-#resam ple 5km reef mack to cmip grid
-file = 'tos_day_ssp119_r1i1p1f1_r1i1p1f2/processed/dhw_Oday_MRI-ESM2-0_hist_ssp119_GBR_ann_max.nc'
-
-mask_cube = iris.load_cube(basedir+mask_file)
-
-cube = iris.load_cube(basedir+file)
-outmask = cube[0].copy()
-outmask.data[:] = np.nan
-outmask.data.mask[:] = False
-
 xx, yy = np.meshgrid(new_mask_cube.coord('longitude').points, new_mask_cube.coord('latitude').points)
 loc = np.isfinite(new_mask_cube.data.data)
 ref_lons = xx[loc]
@@ -42,7 +46,6 @@ ref_lats = yy[loc]
 lat = cube.coord('latitude')
 lon = cube.coord('longitude')
 for i,dummy in enumerate(ref_lons):
-    print i
     lat_coord1 = lat.nearest_neighbour_index(ref_lats[i])
     lon_coord1 = lon.nearest_neighbour_index(ref_lons[i])
     outmask.data.data[lat_coord1,lon_coord1] = 1.0
@@ -56,9 +59,14 @@ for directorie in directories:
     print directorie
     for model in models:
         print model
-        file = base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/processed/dhw_Oday_'+model+'_hist_'+directorie.split('_')[2]+'_GBR_ann_max.nc'
-        file2 = base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/processed/dhw_Oday_'+model+'_hist_'+directorie.split('_')[2]+'_GBR_ann_masked.nc'
-        print file
-        cube = iris.load_cube(basedir+file)
-        cube.data.data[:,np.logical_not(np.isfinite(outmask.data.data))] = np.nan
-        iris.fileformats.netcdf.save(cube, file2)
+        file = basedir+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/processed/dhw_Oday_'+model+'_hist_'+directorie.split('_')[2]+'_GBR_ann_max.nc'
+        if os.path.exists(file):
+            file2 = basedir+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/processed/dhw_Oday_'+model+'_hist_'+directorie.split('_')[2]+'_GBR_ann_max_masked.nc'
+            print file
+            cube = iris.load_cube(file)
+            cube.data.data[:,np.logical_not(np.isfinite(outmask.data.data))] = np.nan
+            iris.fileformats.netcdf.save(cube, file2)
+
+
+
+subprocess.call(['cp /data/BatCaveNAS/ph290/CMIP6_william/tos_day_*_r1i1p1f1_r1i1p1f2/processed/dhw*_ann_max* /home/shared/for_ben/'], shell=True)
