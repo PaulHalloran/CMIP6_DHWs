@@ -22,6 +22,18 @@ import os.path
 import time
 from datetime import datetime
 
+basedir = '/data/BatCaveNAS/ph290/CMIP6_william/'
+lock_file = basedir+'lock_merge_hist_and_x'
+lock_file2 = basedir+'lock_concat_extract'
+
+
+while ((os.path.exists(lock_file)) or (os.path.exists(lock_file2))):
+    now = datetime.now()
+    current_time = now.strftime("%H:%M:%S")
+    print("Current Time =", current_time)
+    print 'waiting '
+    time.sleep(30.0)
+
 def linregress_3D(y_array):
     # y_array is a 3-D array formatted like (time,lon,lat)
     # The purpose of this function is to do linear regression using time series of data over each (lon,lat) grid box with consideration of ignoring np.nan
@@ -125,6 +137,7 @@ def dhw(cube,mmm_climatology,years_over_which_to_calculate_dhw):
 
 models = ['ACCESS-CM2','ACCESS-ESM1-5','AWI-CM-1-1-MR','BCC-CSM2-MR','BCC-ESM1','CanESM5','CESM2-FV2','CESM2','CESM2-WACCM-FV2','CNRM-CM6-1','CNRM-CM6-1-HR','CNRM-ESM2-1','EC-Earth3','EC-Earth3-Veg','GFDL-CM4','IPSL-CM6A-LR','MIROC6','MPI-ESM-1-2-HAM','MPI-ESM1-2-HR','MPI-ESM1-2-LR','MRI-ESM2-0','NorESM2-LM','NorESM2-MM','SAM0-UNICON','UKESM1-0-LL']
 directories = ['tos_day_ssp119_r1i1p1f1_r1i1p1f2','tos_day_ssp126_r1i1p1f1_r1i1p1f2','tos_day_ssp245_r1i1p1f1_r1i1p1f2','tos_day_ssp460_r1i1p1f1_r1i1p1f2','tos_day_ssp585_r1i1p1f1_r1i1p1f2']
+subdir = 'processed_native_grid'
 base_directory = '/data/BatCaveNAS/ph290/CMIP6_william/'
 years_over_which_to_calculate_dhw = [1950,2100]
 
@@ -132,49 +145,48 @@ for directorie in directories:
     print directorie
     for model in models:
         print model
-        if model <> 'IPSL-CM6A-LR':
-            file = base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/processed/tos_Oday_'+model+'_hist_'+directorie.split('_')[2]+'.nc'
-            print file
-            if os.path.exists(file):
-                output_filename = base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/processed/dhw_Oday_'+model+'_hist_'+directorie.split('_')[2]+'_global.nc'
-                output_filename2 = base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/processed/dhw_Oday_'+model+'_hist_'+directorie.split('_')[2]+'_global_ann_max.nc'
-                mmm_file = base_directory+'tos_day_historical_r1i1p1f1_r1i1p1f2/processed/'+model+'_mmm_global.nc'
-                test1 = os.path.exists(output_filename)
-                test2 = os.path.exists(output_filename2)
-                if not(test1) and not(test2):
-                    print 'reading in file'
-                    cube = iris.load_cube(file)
-                    try:
-                        iris.coord_categorisation.add_year(cube, 'time', name='year')
-                    except:
-                        pass
-                    try:
-                        iris.coord_categorisation.add_month(cube, 'time', name='month')
-                    except:
-                        pass
-                    try:
-                        iris.coord_categorisation.add_month_number(cube, 'time', name='month_number')
-                    except:
-                        pass
-                    if not(os.path.exists(mmm_file)):
-                        print 'calculating mmm_climatology'
-                        mmm_climatology = mmm_skirving(cube)
-                        iris.fileformats.netcdf.save(mmm_climatology, mmm_file)
-                    else:
-                        print 'reading in mmm_climatology'
-                        mmm_climatology = iris.load_cube(mmm_file)
-                    print 'calculating DHW'
-                    dhw_cube = dhw(cube,mmm_climatology,years_over_which_to_calculate_dhw)
-                    cube = iris.load_cube(file)
-                    try:
-                        iris.coord_categorisation.add_year(dhw_cube, 'time', name='year')
-                    except:
-                        pass
-                    dhw_cube_max = dhw_cube.aggregated_by('year',iris.analysis.MAX)
-                    print 'saving file'
-                    iris.fileformats.netcdf.save(dhw_cube, output_filename)
-                    iris.fileformats.netcdf.save(dhw_cube_max, output_filename2)
+        file = base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/'+subdir+'/tos_Oday_'+model+'_hist_'+directorie.split('_')[2]+'_GBR.nc'
+        print file
+        if os.path.exists(file):
+            output_filename = base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/'+subdir+'/dhw_Oday_'+model+'_hist_'+directorie.split('_')[2]+'_GBR.nc'
+            output_filename2 = base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/'+subdir+'/dhw_Oday_'+model+'_hist_'+directorie.split('_')[2]+'_GBR_ann_max.nc'
+            mmm_file = base_directory+'tos_day_historical_r1i1p1f1_r1i1p1f2/'+subdir+'/'+model+'_mmm.nc'
+            test1 = os.path.exists(output_filename)
+            test2 = os.path.exists(output_filename2)
+            if not(test1) and not(test2):
+                print 'reading in file'
+                cube = iris.load_cube(file)
+                try:
+                    iris.coord_categorisation.add_year(cube, 'time', name='year')
+                except:
+                    pass
+                try:
+                    iris.coord_categorisation.add_month(cube, 'time', name='month')
+                except:
+                    pass
+                try:
+                    iris.coord_categorisation.add_month_number(cube, 'time', name='month_number')
+                except:
+                    pass
+                if not(os.path.exists(mmm_file)):
+                    print 'calculating mmm_climatology'
+                    mmm_climatology = mmm_skirving(cube)
+                    iris.fileformats.netcdf.save(mmm_climatology, mmm_file)
                 else:
-                    print 'output already exists'
+                    print 'reading in mmm_climatology'
+                    mmm_climatology = iris.load_cube(mmm_file)
+                print 'calculating DHW'
+                dhw_cube = dhw(cube,mmm_climatology,years_over_which_to_calculate_dhw)
+                cube = iris.load_cube(file)
+                try:
+                    iris.coord_categorisation.add_year(dhw_cube, 'time', name='year')
+                except:
+                    pass
+                dhw_cube_max = dhw_cube.aggregated_by('year',iris.analysis.MAX)
+                print 'saving file'
+                iris.fileformats.netcdf.save(dhw_cube, output_filename)
+                iris.fileformats.netcdf.save(dhw_cube_max, output_filename2)
+            else:
+                print 'output already exists'
         else:
             print 'file does not exist'
