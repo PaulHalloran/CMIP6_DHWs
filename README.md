@@ -99,5 +99,5 @@ This refers to (e.g.):
 - MRI-ESM2-0 available now for ssp119
 - CNRM-ESM2-1 is now availabel for all scenarios
 - Starting processing IPSL on global grid to avoid issues with extracting region given grid issues - output will go to processed_native_grid_global
-- Processing CanESM5 for ssp126, shhould be available by the end of the day
-- attempting to identify why AWI-CM-1-1-MR is not processing.
+- CanESM5 available for ssp126
+- attempting to identify why AWI-CM-1-1-MR is not processing. Issues with grid mean that this is probably not going to be able to be processed without regridding.
