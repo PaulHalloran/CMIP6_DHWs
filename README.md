@@ -96,6 +96,6 @@ This refers to (e.g.):
 
 # Updates 1st June
 
-- MRI-ESM2-0 available for ssp119
-- CNRM-ESM2-1 should be availabel soon for all scenarios
+- MRI-ESM2-0 available now for ssp119
+- CNRM-ESM2-1 is now availabel for all scenarios
 - Starting processing IPSL on global grid to avoid issues with extracting region given grid issues
