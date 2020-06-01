@@ -93,3 +93,9 @@ This refers to (e.g.):
 - _MRI-ESM2-0_ - using the CMIP6 model 'MRI-ESM2-0'
 - hist_ssp126_ - from the historical and ssp126 scenarios combined (the historical run switches to the future run in 2015). For basic info about the scenarios see https://www.researchgate.net/figure/SSP-RCP-scenario-matrix-illustrating-ScenarioMIP-simulations-Each-cell-in-the-matrix_fig1_301594661
 - GBR_ann_max.nc - I have calculated the annual maximum DHW values. The files ending in ‘ann_max_masked..nc’ are still annual maximum DHWs but with the non-reef pixels removed.
+
+# Updates 1st June
+
+- MRI-ESM2-0 available for ssp119
+- CNRM-ESM2-1 should be availabel soon for all scenarios
+- Starting processing IPSL on global grid to avoid issues with extracting region given grid issues
