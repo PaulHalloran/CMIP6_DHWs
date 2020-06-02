@@ -105,3 +105,5 @@ This refers to (e.g.):
 # Updates 2nd June
 - I have re-written the DHW calculation script to allow it to do global grids (output to processed_native_grid_global) without hitting mempry issues when working with these large files. Note that this also speeds up the calculation significantly.
 - using the new global DHW script, I'm processing IPSL  - output will go to processed_native_grid_global
+- processed BCC-CSM2-MR for the two scenarios it was available ssp245 and ssp585
+
