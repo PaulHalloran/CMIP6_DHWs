@@ -25,7 +25,7 @@ import subprocess
 import logging
 import uuid
 
-specific_model = True
+specific_model = False
 my_specific_model = 'UKESM1-0-LL'
 
 basedir = '/data/BatCaveNAS/ph290/CMIP6_william/'
@@ -187,66 +187,57 @@ for directorie in directories:
     print directorie
     if specific_model:
         models = [my_specific_model]
-        for model in models:
+    for model in models:
+        try:
+            print model
+            file = base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/'+subdir+'/tos_Oday_'+model+'_hist_'+directorie.split('_')[2]+'_GBR.nc'
+            print file
             try:
-                print model
-                file = base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/'+subdir+'/tos_Oday_'+model+'_hist_'+directorie.split('_')[2]+'_GBR.nc'
-                print file
-                try:
-                    os.mkdir(base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/'+subdir)
-                except:
-                    pass
-                try:
-                    os.mkdir(base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/'+subdir)
-                except:
-                    pass
-                if os.path.exists(file):
-                    output_filename = base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/'+subdir+'/dhw_Oday_'+model+'_hist_'+directorie.split('_')[2]+'_GBR.nc'
-                    output_filename2 = base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/'+subdir+'/dhw_Oday_'+model+'_hist_'+directorie.split('_')[2]+'_GBR_ann_max.nc'
-                    mmm_file = base_directory+'tos_day_historical_r1i1p1f1_r1i1p1f2/'+subdir+'/'+model+'_mmm.nc'
-                    test1 = os.path.exists(output_filename)
-                    test2 = os.path.exists(output_filename2)
-                    if not(test1) and not(test2):
-                        if not(os.path.exists(mmm_file)):
-                            print 'calculating mmm_climatology'
-                            print 'reading in file'
-                            cube = iris.load_cube(file)
-                            try:
-                                iris.coord_categorisation.add_year(cube, 'time', name='year')
-                            except:
-                                pass
-                            try:
-                                iris.coord_categorisation.add_month(cube, 'time', name='month')
-                            except:
-                                pass
-                            try:
-                                iris.coord_categorisation.add_month_number(cube, 'time', name='month_number')
-                            except:
-                                pass
-                            mmm_climatology = mmm_skirving(cube)
-                            iris.fileformats.netcdf.save(mmm_climatology, mmm_file)
-                        else:
-                            print 'mmm_climatology already exists'
-                            # mmm_climatology = iris.load_cube(mmm_file)
-                        print 'calculating DHW'
-                        dummy = dhw(file,mmm_file,years_over_which_to_calculate_dhw,output_filename,output_filename2)
-                        # try:
-                        #     iris.coord_categorisation.add_year(dhw_cube, 'time', name='year')
-                        # except:
-                        #     pass
-                        # dhw_cube_max = dhw_cube.aggregated_by('year',iris.analysis.MAX)
-                        # print 'saving file'
-                        # iris.fileformats.netcdf.save(dhw_cube, output_filename)
-                        # iris.fileformats.netcdf.save(dhw_cube_max, output_filename2)
-                    else:
-                        print 'output already exists'
-                else:
-                    print 'file does not exist'
-                logging.debug(directorie+' '+model+" succeeded")
+                os.mkdir(base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/'+subdir)
             except:
-                logging.debug(directorie+' '+model+" failed")
+                pass
+            try:
+                os.mkdir(base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/'+subdir)
+            except:
+                pass
+            if os.path.exists(file):
+                output_filename = base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/'+subdir+'/dhw_Oday_'+model+'_hist_'+directorie.split('_')[2]+'_GBR.nc'
+                output_filename2 = base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/'+subdir+'/dhw_Oday_'+model+'_hist_'+directorie.split('_')[2]+'_GBR_ann_max.nc'
+                mmm_file = base_directory+'tos_day_historical_r1i1p1f1_r1i1p1f2/'+subdir+'/'+model+'_mmm.nc'
+                test1 = os.path.exists(output_filename)
+                test2 = os.path.exists(output_filename2)
+                if not(test1) and not(test2):
+                    if not(os.path.exists(mmm_file)):
+                        print 'calculating mmm_climatology'
+                        print 'reading in file'
+                        cube = iris.load_cube(file)
+                        try:
+                            iris.coord_categorisation.add_year(cube, 'time', name='year')
+                        except:
+                            pass
+                        try:
+                            iris.coord_categorisation.add_month(cube, 'time', name='month')
+                        except:
+                            pass
+                        try:
+                            iris.coord_categorisation.add_month_number(cube, 'time', name='month_number')
+                        except:
+                            pass
+                        mmm_climatology = mmm_skirving(cube)
+                        iris.fileformats.netcdf.save(mmm_climatology, mmm_file)
+                    else:
+                        print 'mmm_climatology already exists'
+                    print 'calculating DHW'
+                    dummy = dhw(file,mmm_file,years_over_which_to_calculate_dhw,output_filename,output_filename2)
+                else:
+                    print 'output already exists'
+            else:
+                print 'file does not exist'
+            logging.debug(directorie+' '+model+" succeeded")
+        except:
+            logging.debug(directorie+' '+model+" failed")
 
-subprocess.call('scp '+basedir+'/tos_*/'+subdir+'/dhw* /home/shared/for_ben/'+subdir, shell=True)
+subprocess.call('cp -n '+basedir+'/tos_*/'+subdir+'/dhw* /home/shared/for_ben/'+subdir, shell=True)
 os.remove(lock_file3)
 touch('/home/shared/for_ben/'+subdir+'/all_processed')
 
