@@ -131,59 +131,21 @@ def mmm_skirving(cube):
     mmm_climatology = mm_cube.collapsed('time',iris.analysis.MAX)
     return mmm_climatology
 
-
-def dhw_old(cube,mmm_climatology,years_over_which_to_calculate_dhw):
-    cube_years = cube.coord('year').points
-    #note this is to be uef with daily data...
-    main_cube = cube[np.where((cube_years > years_over_which_to_calculate_dhw[0]) & (cube_years < years_over_which_to_calculate_dhw[1]))]
-    #subtract the monthly mean climatology from the rest of the data
-    try:
-        main_cube.remove_coord('month_number')
-        main_cube.remove_coord('month')
-        main_cube.remove_coord('year')
-    except:
-        pass
-    main_cube -= mmm_climatology
-    #set all values less than 1 to zero
-    main_cube.data[np.where(main_cube.data < 1.0)] = 0.0
-    #make a cube to hold the output data
-    output_cube = main_cube[83::].copy()
-    output_cube.data[:] = np.nan
-    output_cube_data = output_cube.data.copy()
-    #loop through from day 84 to the end of the dataset
-    for i in range(output_cube.shape[0]):
-    #         print i,' of ',output_cube.shape[0]
-        #sum the temperatures in that 84 day window and divide result by 7 to get in DHWeeks rather than DHdays
-        tmp_data = main_cube[i:i+84].collapsed('time',iris.analysis.SUM)/7.0
-        output_cube_data[i,:,:] = tmp_data.data
-    #save the output
-    output_cube.data = output_cube_data
-    return output_cube
-
-
-def dhw(file,mmm_file,years_over_which_to_calculate_dhw):
+def dhw(file,mmm_file,years_over_which_to_calculate_dhw,output_filename,output_filename2):
     # steps to do in cdo:
     # - select year range
     # - subtract the MMM
     # - set values less than 1 to zero
     subprocess.call(['cdo -P 15 selyear,'+str(years_over_which_to_calculate_dhw[0])+'/'+str(years_over_which_to_calculate_dhw[1])+' '+file+' '+temporary_file_space+temp_file1], shell=True)
     subprocess.call(['cdo -P 15 setrtoc,-999.9,0.999,0.0 -sub '+temporary_file_space+temp_file1+' -enlarge,'+temporary_file_space+temp_file1+' '+mmm_file+' '+temporary_file_space+temp_file2], shell=True)
-    subprocess.call('rm '+temporary_file_space+temp_file1, shell=True)
-    main_cube = iris.load_cube(temporary_file_space+temp_file2)
-    subprocess.call('rm '+temporary_file_space+temp_file2, shell=True)
-    #make a cube to hold the output data
-    output_cube = main_cube[83::].copy()
-    output_cube.data[:] = np.nan
-    output_cube_data = output_cube.data.copy()
-    #loop through from day 84 to the end of the dataset
-    for i in range(output_cube.shape[0]):
-    #         print i,' of ',output_cube.shape[0]
-        #sum the temperatures in that 84 day window and divide result by 7 to get in DHWeeks rather than DHdays
-        tmp_data = main_cube[i:i+84].collapsed('time',iris.analysis.SUM)/7.0
-        output_cube_data[i,:,:] = tmp_data.data
-    #save the output
-    output_cube.data = output_cube_data
-    return output_cube
+    subprocess.call(['rm '+temporary_file_space+temp_file1], shell=True)
+    #run day 84 to the end of the dataset - do this using a running sum.
+    #Because this assigns the date from the middle of the running window, shift the ates to account for this
+    #apply selyear again to cut out the 1st year, because the start of this will have been missed due to the 12 week window, so annual max etc. will not be good.
+    subprocess.call(['cdo -P 15 selyear,'+str(years_over_which_to_calculate_dhw[0]+1)+'/'+str(years_over_which_to_calculate_dhw[1])+' -shifttime,+42days -divc,7 -runsum,83 '+temporary_file_space+temp_file2+' '+output_filename], shell=True)
+    subprocess.call(['rm '+temporary_file_space+temp_file2], shell=True)
+    subprocess.call(['cdo -P 15 yearmax '+output_filename+' '+output_filename2], shell=True)
+    return ''
 
 models = ['ACCESS-CM2','ACCESS-ESM1-5','AWI-CM-1-1-MR','BCC-CSM2-MR','BCC-ESM1','CanESM5','CESM2-FV2','CESM2','CESM2-WACCM-FV2','CNRM-CM6-1','CNRM-CM6-1-HR','CNRM-ESM2-1','EC-Earth3','EC-Earth3-Veg','GFDL-CM4','IPSL-CM6A-LR','MIROC6','MPI-ESM-1-2-HAM','MPI-ESM1-2-HR','MPI-ESM1-2-LR','MRI-ESM2-0','NorESM2-LM','NorESM2-MM','SAM0-UNICON','UKESM1-0-LL']
 directories = ['tos_day_ssp119_r1i1p1f1_r1i1p1f2','tos_day_ssp126_r1i1p1f1_r1i1p1f2','tos_day_ssp245_r1i1p1f1_r1i1p1f2','tos_day_ssp460_r1i1p1f1_r1i1p1f2','tos_day_ssp585_r1i1p1f1_r1i1p1f2']
@@ -200,6 +162,14 @@ for directorie in directories:
                 print model
                 file = base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/'+subdir+'/tos_Oday_'+model+'_hist_'+directorie.split('_')[2]+'_GBR.nc'
                 print file
+                try:
+                    os.mkdir(base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/'+subdir)
+                except:
+                    pass
+                try:
+                    os.mkdir(base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/'+subdir)
+                except:
+                    pass
                 if os.path.exists(file):
                     output_filename = base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/'+subdir+'/dhw_Oday_'+model+'_hist_'+directorie.split('_')[2]+'_GBR.nc'
                     output_filename2 = base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/'+subdir+'/dhw_Oday_'+model+'_hist_'+directorie.split('_')[2]+'_GBR_ann_max.nc'
@@ -227,18 +197,8 @@ for directorie in directories:
                             iris.fileformats.netcdf.save(mmm_climatology, mmm_file)
                         else:
                             print 'mmm_climatology already exists'
-                            # mmm_climatology = iris.load_cube(mmm_file)
                         print 'calculating DHW'
-                        dhw_cube = dhw(file,mmm_file,years_over_which_to_calculate_dhw)
-                        # cube = iris.load_cube(file)
-                        # try:
-                        #     iris.coord_categorisation.add_year(dhw_cube, 'time', name='year')
-                        # except:
-                        #     pass
-                        dhw_cube_max = dhw_cube.aggregated_by('year',iris.analysis.MAX)
-                        print 'saving file'
-                        iris.fileformats.netcdf.save(dhw_cube, output_filename)
-                        iris.fileformats.netcdf.save(dhw_cube_max, output_filename2)
+                        dummy = dhw(file,mmm_file,years_over_which_to_calculate_dhw,output_filename,output_filename2)
                     else:
                         print 'output already exists'
                 else:
@@ -246,7 +206,6 @@ for directorie in directories:
                 logging.debug(directorie+' '+model+" succeeded")
             except:
                 logging.debug(directorie+' '+model+" failed")
-
 
 subprocess.call('scp '+basedir+'/tos_*/'+subdir+'/dhw* /home/shared/for_ben/'+subdir, shell=True)
 os.remove(lock_file3)
