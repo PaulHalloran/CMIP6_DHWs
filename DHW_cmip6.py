@@ -19,18 +19,18 @@ import cartopy.crs as ccrs
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 import os
 import os.path
-import time
-from datetime import datetime
+    import time
+    from datetime import datetime
 
-basedir = '/data/BatCaveNAS/ph290/CMIP6_william/'
-lock_file = basedir+'lock_merge_hist_and_x'
+    basedir = '/data/BatCaveNAS/ph290/CMIP6_william/'
+    lock_file = basedir+'lock_merge_hist_and_x'
 
-while os.path.exists(lock_file):
-    now = datetime.now()
-    current_time = now.strftime("%H:%M:%S")
-    print("Current Time =", current_time)
-    print 'waiting '
-    time.sleep(30.0)
+    while os.path.exists(lock_file):
+        now = datetime.now()
+        current_time = now.strftime("%H:%M:%S")
+        print("Current Time =", current_time)
+        print 'waiting '
+        time.sleep(30.0)
 
 def linregress_3D(y_array):
     # y_array is a 3-D array formatted like (time,lon,lat)
@@ -140,6 +140,7 @@ years_over_which_to_calculate_dhw = [1950,2100]
 
 for directorie in directories:
     print directorie
+    models = ['MRI-ESM2-0']
     for model in models:
         print model
         file = base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/processed/tos_Oday_'+model+'_hist_'+directorie.split('_')[2]+'_GBR.nc'
