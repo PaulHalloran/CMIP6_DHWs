@@ -101,3 +101,7 @@ This refers to (e.g.):
 - Starting processing IPSL on global grid to avoid issues with extracting region given grid issues - output will go to processed_native_grid_global
 - CanESM5 available for ssp126
 - attempting to identify why AWI-CM-1-1-MR is not processing. Issues with grid mean that this is probably not going to be able to be processed without regridding.
+
+# Updates 2nd June
+- I have re-written the DHW calculation script to allow it to do global grids (output to processed_native_grid_global) without hitting mempry issues when working with these large files. Note that this also speeds up the calculation significantly.
+- using the new global DHW script, I'm processing IPSL  - output will go to processed_native_grid_global
