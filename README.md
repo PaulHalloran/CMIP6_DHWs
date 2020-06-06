@@ -107,3 +107,5 @@ This refers to (e.g.):
 - using the new global DHW script, I'm processing IPSL  - output will go to processed_native_grid_global
 - processed BCC-CSM2-MR for the two scenarios it was available ssp245 and ssp585
 
+# Update 6th June
+- Produced DHWS and ann max DHWs for all models on native grid at global scale. Copied to /home/shared/for_ben/processed_native_grid_global/
