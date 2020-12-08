@@ -109,3 +109,8 @@ This refers to (e.g.):
 
 # Update 6th June
 - Produced DHWS and ann max DHWs for all models on native grid at global scale. Copied to /home/shared/for_ben/processed_native_grid_global/
+
+# Update 8th Dec 2020
+- I've tested the native grid script capable of working with global data (DHW_cmip6_native_grid_Dec_2020.py) because it is based on CDO (command line disk based rarher than memory based tool) and converted to python3, against the original stype script (DHW_cmip6_Dec_2020.py) which did it all in Python. The results are identical.
+
+I\ll now process everything with the global script so I don't itroduce any issues by trying tio extract a specific grid.
