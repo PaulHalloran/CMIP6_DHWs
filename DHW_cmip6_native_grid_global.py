@@ -25,13 +25,12 @@ import subprocess
 import logging
 import uuid
 
-
-specific_model = True
+specific_model = False
 my_specific_model = 'IPSL-CM6A-LR'
 
 basedir = '/data/BatCaveNAS/ph290/CMIP6_william/'
 lock_file = basedir+'lock_merge_hist_and_x_global'
-lock_file2 = basedir+'lock_concat_extract_global'
+lock_file2 = basedir+'lock_concat_global'
 lock_file3 = basedir+'lock_dhw_global'
 
 temporary_file_space = '/disk2/ph290/tmp/'
@@ -207,7 +206,7 @@ for directorie in directories:
         except:
             logging.debug(directorie+' '+model+" failed")
 
-subprocess.call('scp '+basedir+'/tos_*/'+subdir+'/dhw* /home/shared/for_ben/'+subdir, shell=True)
+subprocess.call('scp '+basedir+'/tos_*/'+subdir+'/dhw*ann_max.nc /home/shared/for_ben/'+subdir, shell=True)
 os.remove(lock_file3)
 touch('/home/shared/for_ben/'+subdir+'/all_processed')
 

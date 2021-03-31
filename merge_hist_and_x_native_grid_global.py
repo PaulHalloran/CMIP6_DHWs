@@ -10,15 +10,16 @@ def touch(path):
         os.utime(path, None)
 
 
-# models = ['ACCESS-CM2','ACCESS-ESM1-5','AWI-CM-1-1-MR','BCC-CSM2-MR','BCC-ESM1','CanESM5','CESM2-FV2','CESM2','CESM2-WACCM-FV2','CNRM-CM6-1','CNRM-CM6-1-HR','CNRM-ESM2-1','EC-Earth3','EC-Earth3-Veg','GFDL-CM4','IPSL-CM6A-LR','MIROC6','MPI-ESM-1-2-HAM','MPI-ESM1-2-HR','MPI-ESM1-2-LR','MRI-ESM2-0','NorESM2-LM','NorESM2-MM','SAM0-UNICON','UKESM1-0-LL']
-models = ['IPSL-CM6A-LR']
+#models = ['ACCESS-CM2','ACCESS-ESM1-5','AWI-CM-1-1-MR','BCC-CSM2-MR','BCC-ESM1','CanESM5','CESM2-FV2','CESM2','CESM2-WACCM-FV2','CNRM-CM6-1','CNRM-CM6-1-HR','CNRM-ESM2-1','EC-Earth3','EC-Earth3-Veg','GFDL-CM4','IPSL-CM6A-LR','MIROC6','MPI-ESM-1-2-HAM','MPI-ESM1-2-HR','MPI-ESM1-2-LR','MRI-ESM2-0','NorESM2-LM','NorESM2-MM','SAM0-UNICON','UKESM1-0-LL']
+
+models = ['AWI-CM-1-1-MR','CESM2','CESM2-WACCM','CMCC-CM2-SR5','CNRM-CM6-1','CNRM-CM6-1-HR','GFDL-CM4','HadGEM3-GC31-LL','HadGEM3-GC31-MM','MIROC6','MRI-ESM2-0']
 
 directories = ['tos_day_ssp119_r1i1p1f1_r1i1p1f2','tos_day_ssp126_r1i1p1f1_r1i1p1f2','tos_day_ssp245_r1i1p1f1_r1i1p1f2','tos_day_ssp460_r1i1p1f1_r1i1p1f2','tos_day_ssp585_r1i1p1f1_r1i1p1f2']
 subdir = 'processed_native_grid_global'
 
 basedir = '/data/BatCaveNAS/ph290/CMIP6_william/'
 lock_file = basedir+'lock_merge_hist_and_x_global'
-lock_file2 = basedir+'lock_concat_extract_global'
+lock_file2 = basedir+'lock_concat_global'
 touch(lock_file)
 
 

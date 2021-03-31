@@ -15,6 +15,7 @@ from datetime import datetime
 def model_names(directory):
     files = glob.glob(directory+'/*.nc')
     models_tmp = []
+    models = []
     for file in files:
         statinfo = os.stat(file)
         if statinfo.st_size >= 1:
@@ -27,7 +28,7 @@ def touch(path):
         os.utime(path, None)
 
 
-specific_model = True
+specific_model = False
 my_specific_model = 'IPSL-CM6A-LR'
 
 temporary_file_space = '/disk2/ph290/tmp/'
@@ -65,28 +66,28 @@ for direct in directs:
     models = model_names(in_directory)
     if specific_model:
         models = [my_specific_model]
-        for model in models:
-            print model
-            file_name = glob.glob(in_directory+'*_'+model+'_*')[0]
-            output_filename = '_'.join(file_name.split('/')[-1].split('_')[0:4])+'_GBR.nc'
-            tmp = glob.glob(out_directory+output_filename)
-            if np.size(tmp) == 0:
-                print 'reading in: '+model
-                file_starter = '_'.join(file_name.split('/')[-1].split('_')[0:6])
-                files = glob.glob(in_directory+'/'+file_starter+'*.nc')
-                sizing = np.size(files)
-                if not sizing == 0:
-                    if sizing > 1:
-                        files = ' '.join(files)
-                        print 'merging files'
-                        subprocess.call(['cdo -P 15 mergetime '+files+' '+temporary_file_space+temp_file1], shell=True)
-                    if sizing == 1:
-                        subprocess.call(['cp '+files[0]+' '+temporary_file_space+temp_file1], shell=True)
-                    print 'extracting range'
-                    subprocess.call(['cdo -P 15 -f nc4c -z zip_2 -selvar,'+var+' -seldate,'+daterange+' '+temporary_file_space+temp_file1+' '+out_directory+output_filename], shell=True)
-                    subprocess.call('rm '+temporary_file_space+temp_file1, shell=True)
-            else:
-                print model,' output exists'
+    for model in models:
+        print model
+        file_name = glob.glob(in_directory+'*_'+model+'_*')[0]
+        output_filename = '_'.join(file_name.split('/')[-1].split('_')[0:4])+'_GBR.nc'
+        tmp = glob.glob(out_directory+output_filename)
+        if np.size(tmp) == 0:
+            print 'reading in: '+model
+            file_starter = '_'.join(file_name.split('/')[-1].split('_')[0:6])
+            files = glob.glob(in_directory+'/'+file_starter+'*.nc')
+            sizing = np.size(files)
+            if not sizing == 0:
+                if sizing > 1:
+                    files = ' '.join(files)
+                    print 'merging files'
+                    subprocess.call(['cdo -P 15 mergetime '+files+' '+temporary_file_space+temp_file1], shell=True)
+                if sizing == 1:
+                    subprocess.call(['cp '+files[0]+' '+temporary_file_space+temp_file1], shell=True)
+                print 'extracting range'
+                subprocess.call(['cdo -P 15 -f nc4c -z zip_2 -selvar,'+var+' -seldate,'+daterange+' '+temporary_file_space+temp_file1+' '+out_directory+output_filename], shell=True)
+                subprocess.call('rm '+temporary_file_space+temp_file1, shell=True)
+        else:
+            print model,' output exists'
 
 
 os.remove(lock_file)

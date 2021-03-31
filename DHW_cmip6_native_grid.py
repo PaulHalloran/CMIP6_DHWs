@@ -54,7 +54,7 @@ while ((os.path.exists(lock_file)) or (os.path.exists(lock_file2))):
     now = datetime.now()
     current_time = now.strftime("%H:%M:%S")
     print("Current Time =", current_time)
-    print 'waiting '
+    print()'waiting ')
     time.sleep(30.0)
 
 def linregress_3D(y_array):
@@ -99,7 +99,7 @@ def linregress_3D(y_array):
     return slope,intercept
 
 def mmm_skirving(cube):
-    print 'calculating NOAA Skirving MMM'
+    print()'calculating NOAA Skirving MMM')
     cube_years = cube.coord('year').points
     years_for_mmm_climatology = [1985,2012]
     cube = cube[np.where((cube_years >= years_for_mmm_climatology[0]) & (cube_years <= years_for_mmm_climatology[1]))]
@@ -114,9 +114,9 @@ def mmm_skirving(cube):
     clim_cube = cube
     clim_cube_detrended = clim_cube.copy()
     clim_cube_detrended_data = clim_cube_detrended.data
-    print np.shape(clim_cube_detrended)
+    print(np.shape(clim_cube_detrended))
     for i,month in enumerate(np.unique(cube.coord('month_number').points)):
-        print i+1
+        print(i+1)
         loc = np.where(clim_cube.coord('month_number').points == month)
         tmp = clim_cube_detrended_data[loc,:,:][0]
         tmp[np.where(tmp == missing_data_equals )] = np.nan
@@ -175,7 +175,8 @@ def dhw(file,mmm_file,years_over_which_to_calculate_dhw,output_filename,output_f
     return ''
 
 
-models = ['ACCESS-CM2','ACCESS-ESM1-5','AWI-CM-1-1-MR','BCC-CSM2-MR','BCC-ESM1','CanESM5','CESM2-FV2','CESM2','CESM2-WACCM-FV2','CNRM-CM6-1','CNRM-CM6-1-HR','CNRM-ESM2-1','EC-Earth3','EC-Earth3-Veg','GFDL-CM4','IPSL-CM6A-LR','MIROC6','MPI-ESM-1-2-HAM','MPI-ESM1-2-HR','MPI-ESM1-2-LR','MRI-ESM2-0','NorESM2-LM','NorESM2-MM','SAM0-UNICON','UKESM1-0-LL']
+models = ['ACCESS-CM2','ACCESS-ESM1-5','BCC-CSM2-MR','BCC-ESM1','CanESM5','CESM2-FV2','CESM2','CESM2-WACCM-FV2','CNRM-CM6-1','CNRM-CM6-1-HR','CNRM-ESM2-1','EC-Earth3','EC-Earth3-Veg','GFDL-CM4','IPSL-CM6A-LR','MIROC6','MPI-ESM-1-2-HAM','MPI-ESM1-2-HR','MPI-ESM1-2-LR','MRI-ESM2-0','NorESM2-LM','NorESM2-MM','SAM0-UNICON','UKESM1-0-LL']
+#note - 'AWI-CM-1-1-MR', removed because can;t extract region
 directories = ['tos_day_ssp119_r1i1p1f1_r1i1p1f2','tos_day_ssp126_r1i1p1f1_r1i1p1f2','tos_day_ssp245_r1i1p1f1_r1i1p1f2','tos_day_ssp460_r1i1p1f1_r1i1p1f2','tos_day_ssp585_r1i1p1f1_r1i1p1f2']
 ###########
 subdir = 'processed_native_grid'
@@ -184,14 +185,14 @@ base_directory = '/data/BatCaveNAS/ph290/CMIP6_william/'
 years_over_which_to_calculate_dhw = [1950,2100]
 
 for directorie in directories:
-    print directorie
+    print(directorie)
     if specific_model:
         models = [my_specific_model]
     for model in models:
         try:
-            print model
+            print(model)
             file = base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/'+subdir+'/tos_Oday_'+model+'_hist_'+directorie.split('_')[2]+'_GBR.nc'
-            print file
+            print(file)
             try:
                 os.mkdir(base_directory+'tos_day_'+directorie.split('_')[2]+'_r1i1p1f1_r1i1p1f2/'+subdir)
             except:
@@ -208,8 +209,8 @@ for directorie in directories:
                 test2 = os.path.exists(output_filename2)
                 if not(test1) and not(test2):
                     if not(os.path.exists(mmm_file)):
-                        print 'calculating mmm_climatology'
-                        print 'reading in file'
+                        print('calculating mmm_climatology')
+                        print('reading in file')
                         cube = iris.load_cube(file)
                         try:
                             iris.coord_categorisation.add_year(cube, 'time', name='year')
@@ -226,13 +227,13 @@ for directorie in directories:
                         mmm_climatology = mmm_skirving(cube)
                         iris.fileformats.netcdf.save(mmm_climatology, mmm_file)
                     else:
-                        print 'mmm_climatology already exists'
-                    print 'calculating DHW'
+                        print('mmm_climatology already exists')
+                    print('calculating DHW')
                     dummy = dhw(file,mmm_file,years_over_which_to_calculate_dhw,output_filename,output_filename2)
                 else:
-                    print 'output already exists'
+                    print('output already exists')
             else:
-                print 'file does not exist'
+                print('file does not exist')
             logging.debug(directorie+' '+model+" succeeded")
         except:
             logging.debug(directorie+' '+model+" failed")
