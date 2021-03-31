@@ -117,3 +117,4 @@ I\ll now process everything with the global script so I don't itroduce any issue
 
 # Update 31st Mar 2021
 - Update to change the annual maximum calculation so that it is performed on a year cenered on the austral summer (Aug 1st to Jul 31st) to avoid double counting DHW extreme seasons. Script: /data/BatCaveNAS/ph290/CMIP6_william/CMIP6_DHWs/ann_max_austral_summer.py output in /data/BatCaveNAS/ph290/CMIP6_william/tos_day_ssp???_r1i1p1f1_r1i1p1f2/processed_native_grid_global/
+- Output copied to /home/shared/for_ben/processed_native_grid_global/austral_summer/
