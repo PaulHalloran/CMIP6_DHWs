@@ -57,3 +57,8 @@ for d in directories:
         dhw_austral_ann_max = cube.aggregated_by('year2', iris.analysis.MAX)[1:-1]
 
         iris.fileformats.netcdf.save(dhw_austral_ann_max, f.split('.nc')[0]+'_austral_summer_ann_max.nc')
+
+
+# output files in: /data/BatCaveNAS/ph290/CMIP6_william/tos_day_ssp???_r1i1p1f1_r1i1p1f2/processed_native_grid_global/*_austral_summer_ann_max.nc
+
+/home/shared/for_ben/processed_native_grid_global/

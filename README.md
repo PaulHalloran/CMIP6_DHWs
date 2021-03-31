@@ -114,3 +114,6 @@ This refers to (e.g.):
 - I've tested the native grid script capable of working with global data (DHW_cmip6_native_grid_Dec_2020.py) because it is based on CDO (command line disk based rarher than memory based tool) and converted to python3, against the original stype script (DHW_cmip6_Dec_2020.py) which did it all in Python. The results are identical.
 
 I\ll now process everything with the global script so I don't itroduce any issues by trying tio extract a specific grid.
+
+# Update 31st Mar 2021
+- Update to change the annual maximum calculation so that it is performed on a year cenered on the austral summer (Aug 1st to Jul 31st) to avoid double counting DHW extreme seasons. Script: /data/BatCaveNAS/ph290/CMIP6_william/CMIP6_DHWs/ann_max_austral_summer.py output in /data/BatCaveNAS/ph290/CMIP6_william/tos_day_ssp???_r1i1p1f1_r1i1p1f2/processed_native_grid_global/
